@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questions for user</title>
+</head>
+<style>
+    .wrapper {
+        max-width: 20%;
+    }
+    .wrapper__item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        border: 2px solid lightcoral;
+    }
+
+    .wrapper__item p {
+        margin: 0;
+        font-size: 20px;
+        color: lightseagreen;
+    }
+
+    .wrapper__item div {
+        margin-left: 10px;
+        font-size: 18px;
+    }
+
+    .wrapper__item--name {
+        font-size: 20px;
+        font-weight: 700;
+        color: lightseagreen;
+    }
+
+
+</style>
+<body>
+
+<div class="wrapper">
+    <div id="user-name" class="wrapper__item wrapper__item--name"></div>
+    <div class="wrapper__item">
+        <p>Birthday:</p>
+        <div id="user-birthday"></div>
+    </div>
+    <div class="wrapper__item">
+        <p>City:</p>
+        <div id="user-city"></div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const userNameElem = document.getElementById('user-name');
+        const userBirthdayElem = document.getElementById('user-birthday');
+        const userCityElem = document.getElementById('user-city');
+        const defaultName = 'John';
+        const defauldDate = '12.05.1995';
+        const defaultCity = 'Kyiv';
+        const userName = prompt('What is your name?', defaultName);
+        const userBirthday = prompt('Date your birthday?', '12.05.1995');
+        const userCity = prompt('Where are you leave', 'Kyiv');
+
+        userNameElem.appendChild(document.createTextNode(userName ? userName : defaultName));
+        userBirthdayElem.appendChild(document.createTextNode(userBirthday ? userBirthday : defauldDate));
+        userCityElem.appendChild(document.createTextNode(userCity ? userCity : defaultCity));
+    })();
+</script>
+
+</body>
+</html>
