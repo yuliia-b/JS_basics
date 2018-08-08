@@ -6,10 +6,32 @@
 </head>
 <style>
 
+    .wrapper {
+        display: flex;
+    }
+
+    table {
+        margin: 10px;
+        border: 2px solid seagreen;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid seagreen;
+        font-size: 16px;
+    }
+
+    th {
+        background: darkseagreen;
+        font-size: 18px;
+    }
+
 </style>
 <body>
 
-<div class="wrapper">
+<div class="wrapper" id="tables-wrapper">
 
 </div>
 
@@ -145,15 +167,20 @@
 
     function getTotal(data) {
         let total = 0;
+        let objTotal = {};
+        let arrTotal = [];
 
         data.forEach((elem) => {
             total += +elem.amount;
         });
 
-        return Math.round(total * 100) / 100;
+        objTotal.total = Math.round(total * 100) / 100;
+        arrTotal.push(objTotal);
+
+        return arrTotal;
     }
 
-    function getMiddleSellary(data, nameCol) {
+    function getMiddleSalary(data, nameCol) {
         let middleSelData = [];
         let k = 0;
         let count = 0;
@@ -169,7 +196,7 @@
 
             } else {
                 objData[nameCol] = currentName;
-                objData.middleSellary = Math.round((sum / count) * 100) / 100;
+                objData.middleSalary = Math.round((sum / count) * 100) / 100;
                 middleSelData.push(objData);
 
                 k = i;
@@ -179,7 +206,7 @@
 
             if(i === data.length - 1) {
                 objData[nameCol] = currentName;
-                objData.middleSellary = Math.round((sum / count) * 100) / 100;
+                objData.middleSalary = Math.round((sum / count) * 100) / 100;
                 middleSelData.push(objData);
             }
         });
@@ -190,27 +217,63 @@
     function sortDataForMonth(data) {
         let newData = [...data];
         return newData.sort((a, b) => {
-            if(a.month > b.month) 
+            if(a.month > b.month)
                 return 1;
-            else if(a.month < b.month) 
+            else if(a.month < b.month)
                 return -1;
-            else return 0;        
+            else return 0;
         });
+    }
+
+    function createTable(headInfoText, tableInfo) {
+        let table = document.createElement('table');
+        let thead = document.createElement('thead');
+        let tbody = document.createElement('tbody');
+        let tr = document.createElement('tr');
+
+        headInfoText.forEach((elem) => {
+            let th = document.createElement('th');
+            let text = document.createTextNode(elem);
+
+            th.appendChild(text);
+            tr.appendChild(th);
+        });
+
+        thead.appendChild(tr);
+        table.appendChild(thead);
+
+        tableInfo.forEach((elem) => {
+            let tr = document.createElement('tr');
+
+            for(let key in elem) {
+                let td = document.createElement('td');
+                let text = document.createTextNode(elem[ key ]);
+
+                td.appendChild(text);
+                tr.appendChild(td);
+            }
+
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+
+        return table;
     }
 
     const readFileData = readFile();
     const arrayData = getArrayData(readFileData);
     const data = getArrayDataObj(arrayData);
     const sortedDataMonth = sortDataForMonth(data);
+    const totalSalary = getTotal(data);
+    const middleSalaryDepartment = getMiddleSalary(data, 'department');
+    const middleSalaryMonth = getMiddleSalary(sortedDataMonth, 'month');
 
-    console.log(getTotal(data));
-    
+    let wrapper = document.getElementById('tables-wrapper');
 
-    
-    console.log(getMiddleSellary(data, 'department'));
-
-    console.log(getMiddleSellary(sortedDataMonth, 'month'));
-
+    wrapper.appendChild( createTable(['Department', 'Salary'], middleSalaryDepartment));
+    wrapper.appendChild( createTable(['Month', 'Salary'], middleSalaryMonth));
+    wrapper.appendChild( createTable(['Total'], totalSalary) );
 
 })();
 </script>
